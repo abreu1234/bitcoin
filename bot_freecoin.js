@@ -12,10 +12,12 @@
 
 //Variaveis de configuração
 var initial_val = 0.00000002; //valor inicial
+var reset_current_val = 0.00000002; //Valor inicial quando for aumentar a aposta
 var $max = 100; //A quantidade de voltas que irá dar
 
+
 //Não precisa alterar essas variávels
-var current_val = initial_val;
+var current_val = reset_current_val;
 var $win = true; 
 var $i = 0;
 var $last = 'hi';
@@ -31,7 +33,7 @@ function reset() {
 	$win = true;
 	$last = 'hi';
 	$i = 0;
-	current_val = initial_val;
+	current_val = reset_current_val;
 	$seq = 0;
 	$t_win = 0;
 	$t_los = 0;
@@ -62,7 +64,7 @@ function init() {
 	if($win === true) {
 		//Mantém o mesmo
 		bet('last');
-		current_val=initial_val;
+		current_val=reset_current_val;
 		$('#double_your_btc_stake').val(initial_val);
 	//Caso tenha perdido
 	}else {
@@ -70,8 +72,10 @@ function init() {
 		if($i>=3) {
 			//Muda aposta
 			$('#double_your_btc_stake').val(current_val*=2);	
+			bet('change');
+		}else{
+			bet('change');
 		}
-		bet('change');
 	}
 	
 	setTimeout(winLose, 750);
