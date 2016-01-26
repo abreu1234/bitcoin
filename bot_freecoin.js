@@ -22,7 +22,7 @@ var $last = 'hi';
 var $seq = 0;
 var $t_win = 0;
 var $t_los = 0;
-var $interval = NULL;
+var $interval = null;
 
 /**
  * Reseta todos os valores e para o script
@@ -35,6 +35,7 @@ function reset() {
 	$seq = 0;
 	$t_win = 0;
 	$t_los = 0;
+	if($interval != null)
 	clearInterval($interval);
 }
 
