@@ -13,7 +13,7 @@
 //Variaveis de configuração
 var initial_val = 0.00000002; //valor inicial
 var reset_current_val = 0.00000004; //Valor inicial quando for aumentar a aposta
-var on_lose = 0.00000002; //Valor ao perder
+var on_lose = 0.00000001; //Valor ao perder
 var $max = 100; //A quantidade de voltas que irá dar
 
 //Não precisa alterar essas variávels
@@ -55,7 +55,7 @@ function resetInit() {
 function init() {
 	$seq++;
 	//Verifica se a sequancia já acabou
-	if($seq > $max) {
+	if($win === true && $seq > $max) {
 		console.log('GANHOU: '+$t_win+' PERDEU: '+$t_los);
 		clearInterval($interval);
 		return false;
