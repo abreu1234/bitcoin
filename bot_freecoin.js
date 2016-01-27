@@ -14,6 +14,7 @@
 var initial_val = 0.00000002; //valor inicial
 var reset_current_val = 0.00000004; //Valor inicial quando for aumentar a aposta
 var on_lose = 0.00000001; //Valor ao perder
+var max_lose = 0.00000256;
 var $max = 100; //A quantidade de voltas que irá dar
 
 //Não precisa alterar essas variávels
@@ -67,17 +68,20 @@ function init() {
 		$('#double_your_btc_stake').val(initial_val);
 		bet('last');
 	//Caso tenha perdido
-	}else {
-		$('#double_your_btc_stake').val(on_lose);
+	}else {		
 		//Caso perdeu 3 vezes seguidas
 		if($i>=3) {
-			//Muda aposta
-			$('#double_your_btc_stake').val(current_val*=2);	
-			bet('change');
+			if(current_val < max_lose) {
+				//Muda aposta
+				$('#double_your_btc_stake').val(current_val*=2);	
+			}else {
+				$('#double_your_btc_stake').val(current_val);
+			}
 		}else{
-			
-			bet('change');
+			$('#double_your_btc_stake').val(on_lose);
 		}
+
+		bet('change');
 	}
 	
 	setTimeout(winLose, 750);
