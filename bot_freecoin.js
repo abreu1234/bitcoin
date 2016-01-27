@@ -12,10 +12,10 @@
 
 //Variaveis de configuração
 var initial_val = 0.00000002; //valor inicial
-var reset_current_val = 0.00000004; //Valor inicial quando for aumentar a aposta
+var reset_current_val = 0.00000005; //Valor inicial quando for aumentar a aposta
 var on_lose = 0.00000001; //Valor ao perder
-var max_lose = 0.00000256;
-var $max = 100; //A quantidade de voltas que irá dar
+var max_lose = 0.00004096;
+var $max = 50; //A quantidade de voltas que irá dar
 
 //Não precisa alterar essas variávels
 var current_val = reset_current_val;
@@ -58,7 +58,8 @@ function init() {
 	//Verifica se a sequancia já acabou
 	if($win === true && $seq > $max) {
 		console.log('GANHOU: '+$t_win+' PERDEU: '+$t_los);
-		clearInterval($interval);
+		//clearInterval($interval);
+		setTimeout(resetInit, 5000);
 		return false;
 	}
 	//Caso tenha vencido
@@ -107,6 +108,9 @@ function bet(type) {
 function winLose() {
 	$win = $('#double_your_btc_bet_win').is(":visible");
 	if($win === true) {
+		if($i>=4)
+			$seq = $max+1;
+
 		console.log('GANHOU');
 		$i=0;
 		$t_win++;
