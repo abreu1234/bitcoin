@@ -11,10 +11,10 @@
  */
 
 //Variaveis de configuração
-var initial_val = 0.009; //valor inicial
-var reset_current_val = 0.01800000; //Valor inicial quando for aumentar a aposta
-var on_lose = 0.009; //Valor ao perder
-var max_lose = 1.15200000;
+var initial_val = 0.013; //valor inicial
+var reset_current_val = 0.011; //Valor inicial quando for aumentar a aposta
+var on_lose = 0.011; //Valor ao perder
+var max_lose = 12.15200000;
 var $max = 50; //A quantidade de voltas que irá dar
 
 //Não precisa alterar essas variávels
@@ -26,6 +26,8 @@ var $seq = 0;
 var $t_win = 0;
 var $t_los = 0;
 var $interval = null;
+var $seq_count = 0;
+var $max_seq_lose = 0;
 
 /**
  * Reseta todos os valores e para o script
@@ -38,6 +40,7 @@ function reset() {
 	$seq = 0;
 	$t_win = 0;
 	$t_los = 0;
+	$seq_count = 0;
 	if($interval != null)
 	clearInterval($interval);
 }
@@ -46,8 +49,10 @@ function reset() {
  * Reseta todos os valores e reinicia o script
  */
 function resetInit() {
-	reset();
-	$interval = setInterval(init, 1000);
+	//reset();
+	//$interval = setInterval(init, 1200);
+	init();
+	setTimeout(resetInit, (($i+1) * 1000) + Math.round(Math.random() * 1000));
 }
 
 /**
@@ -56,34 +61,36 @@ function resetInit() {
 function init() {
 	$seq++;
 	//Verifica se a sequancia já acabou
-	if($win === true && $seq > $max) {
-		console.log('GANHOU: '+$t_win+' PERDEU: '+$t_los);
+	//if($win === true && $seq > $max) {
+	//	console.log('GANHOU: '+$t_win+' PERDEU: '+$t_los);
 		//clearInterval($interval);
-		setTimeout(resetInit, 5000);
-		return false;
-	}
+		//setTimeout(resetInit, 5000);
+	//	return false;
+	//}
 	//Caso tenha vencido
 	if($win === true) {
 		//Mantém o mesmo
 		current_val=reset_current_val;
 		$('#double_your_doge_stake').val(initial_val);
-		bet('last');
 	//Caso tenha perdido
 	}else {		
 		//Caso perdeu 3 vezes seguidas
-		if($i>=3) {
-			if(current_val < max_lose) {
-				//Muda aposta
-				$('#double_your_doge_stake').val(current_val*=2);	
-			}else {
-				$('#double_your_doge_stake').val(current_val);
-			}
-		}else{
-			$('#double_your_doge_stake').val(on_lose);
+		if(current_val < max_lose) {
+			//Muda aposta
+			$('#double_your_doge_stake').val(current_val*=2);	
+		}else {
+			reset();
+			console.log("TERMINOU\n MAIOR SEQUENCIA DE DERROTA: "+$max_seq_lose);
 		}
-
-		bet('change');
 	}
+		
+	if($seq_count >= 3) {
+		$seq_count = 0;
+		bet('change');
+	}else {
+		bet('last');
+	}
+	$seq_count++;
 	
 	setTimeout(winLose, 750);
 }
@@ -108,15 +115,15 @@ function bet(type) {
 function winLose() {
 	$win = $('#double_your_doge_bet_win').is(":visible");
 	if($win === true) {
-		if($i>=4)
-			$seq = $max+1;
-
 		console.log('GANHOU');
 		$i=0;
 		$t_win++;
 	} else {
 		$i++;
 		$t_los++;
+		if($i > $max_seq_lose)
+			$max_seq_lose = $i;
+
 		console.log('PERDEU '+$i);
 	}
 }
